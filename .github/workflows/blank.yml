@@ -28,7 +28,44 @@ jobs:
       - name: 安装依赖包
         run: |
           pip install curl_cffi requests
+          
+       - name: 📥 Download Cookie File
+        id: download
+        run: |
+          COOKIE_URL="${{ secrets.COOKIE_URL }}"
+          
+          if [ -z "$COOKIE_URL" ]; then
+            echo "❌ ERROR: secrets.COOKIE_URL is not set!"
+            exit 1
+          fi
+          
+          echo "📥 Downloading from: ${COOKIE_URL:0:30}..."
+          
+          curl -fsSL \
+            --max-time 30 \
+            --retry 3 \
+            --retry-delay 2 \
+            -o "${{ env.COOKIE_FILE_PATH }}" \
+            "$COOKIE_URL"
+          
+          if [ ! -s "${{ env.COOKIE_FILE_PATH }}" ]; then
+            echo "❌ ERROR: Cookie file is empty or download failed!"
+            exit 1
+          fi
+          
+          FILE_SIZE=$(wc -c < "${{ env.COOKIE_FILE_PATH }}")
+          echo "✅ Downloaded: $FILE_SIZE bytes"
+          echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
 
+      - name: 🔐 Inject NS_COOKIE to Environment
+        id: inject
+        run: |
+          {
+            echo "NS_COOKIE<<EOF"
+            cat "${{ env.COOKIE_FILE_PATH }}"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+                    
       - name: 运行签到脚本
         env:
           # 基本账号
@@ -48,7 +85,7 @@ jobs:
           PASS5: ${{ secrets.PASS5 }}
           
           # Cookie配置
-          NS_COOKIE: ${{ vars.NS_COOKIE || secrets.NS_COOKIE }}
+          # NS_COOKIE: ${{ vars.NS_COOKIE || secrets.NS_COOKIE }}
           
           # 验证码配置
           SOLVER_TYPE: ${{ secrets.SOLVER_TYPE }}
