@@ -72,21 +72,6 @@ jobs:
           USER: ${{ secrets.USER }}
           PASS: ${{ secrets.PASS }}
           
-          # 额外账号1-5
-          USER1: ${{ secrets.USER1 }}
-          PASS1: ${{ secrets.PASS1 }}
-          USER2: ${{ secrets.USER2 }}
-          PASS2: ${{ secrets.PASS2 }}
-          USER3: ${{ secrets.USER3 }}
-          PASS3: ${{ secrets.PASS3 }}
-          USER4: ${{ secrets.USER4 }}
-          PASS4: ${{ secrets.PASS4 }}
-          USER5: ${{ secrets.USER5 }}
-          PASS5: ${{ secrets.PASS5 }}
-          
-          # Cookie配置
-          # NS_COOKIE: ${{ vars.NS_COOKIE || secrets.NS_COOKIE }}
-          
           # 验证码配置
           SOLVER_TYPE: ${{ secrets.SOLVER_TYPE }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
