@@ -59,14 +59,9 @@ jobs:
           echo "✅ Downloaded: $FILE_SIZE bytes"
           echo "file_size=$FILE_SIZE" >> $GITHUB_OUTPUT
 
-      - name: 🔐 Inject NS_COOKIE to Environment
-        id: inject
+      - name: 🔐 Inject NS_COOKIE (Single Line)
         run: |
-          {
-            echo "NS_COOKIE<<EOF"
-            cat "${{ env.COOKIE_FILE_PATH }}"
-            echo "EOF"
-          } >> "$GITHUB_ENV"
+          printf 'NS_COOKIE=%s\n' "$(cat /tmp/ns_cookie.txt | tr -d '\n')" >> "$GITHUB_ENV"
                     
       - name: 运行签到脚本
         env:
