@@ -29,7 +29,7 @@ jobs:
         run: |
           pip install curl_cffi requests
           
-       - name: 📥 Download Cookie File
+      - name: 📥 Download Cookie File
         id: download
         run: |
           COOKIE_URL="${{ secrets.COOKIE_URL }}"
